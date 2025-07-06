@@ -11,34 +11,28 @@ import orderRouter from './routes/orderRoutes.js';
 const app = express();
 const port = process.env.PORT || 4000;
 
-// ✅ Connect to MongoDB and Cloudinary
+
 connectDB();
 connectCloudinary();
 
-// ✅ CORS configuration to allow multiple frontends
-const allowedOrigins = [
-  'http://localhost:5173',      // Frontend 1 (e.g., Vite)
-  'http://localhost:5174',      // Frontend 2 (e.g., React CRA)
-
-];
-
-app.use(cors({
+const allowedOrigins = ['https://admin-deal-o-city-17.vercel.app'];
+const corsOptions = {
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps, Postman)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
     } else {
-      return callback(new Error('Not allowed by CORS'));
+      callback(new Error('Not allowed by CORS'));
     }
   },
   credentials: true
-}));
+};
+app.use(cors(corsOptions));
 
-// ✅ Middleware
+
+
 app.use(express.json());
 
-// ✅ Routes
+
 app.get('/', (req, res) => {
   res.send('Home ROUTE');
 });
@@ -48,7 +42,7 @@ app.use('/api/product', productRouter);
 app.use('/api/cart', cartRouter);
 app.use('/api/order', orderRouter);
 
-// ✅ Start Server
+
 app.listen(port, () => {
   console.log(`✅ Backend running on http://localhost:${port}`);
 });
