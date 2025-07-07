@@ -11,13 +11,23 @@ import orderRouter from './routes/orderRoutes.js';
 const app = express();
 const port = process.env.PORT || 4000;
 
-
+// Connect DB & Cloudinary
 connectDB();
 connectCloudinary();
 
-const allowedOrigins = ['https://admin-deal-o-city-17.vercel.app','https://deal-o-city-frontend.vercel.app'];
+// Trust proxy for Vercel deployments
+app.set('trust proxy', 1);
+
+// Allowed frontend URLs (no trailing slash)
+const allowedOrigins = [
+  'https://admin-deal-o-city-17.vercel.app',
+  'https://deal-o-city-frontend.vercel.app'
+];
+
+// CORS options
 const corsOptions = {
   origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl)
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -26,15 +36,16 @@ const corsOptions = {
   },
   credentials: true
 };
+
+// Apply CORS middleware before JSON parsing
 app.use(cors(corsOptions));
 
-
-
+// Middleware
 app.use(express.json());
 
-
+// Routes
 app.get('/', (req, res) => {
-  res.send('Home ROUTE');
+  res.send('✅ Backend is running!');
 });
 
 app.use('/api/user', userRouter);
@@ -42,7 +53,7 @@ app.use('/api/product', productRouter);
 app.use('/api/cart', cartRouter);
 app.use('/api/order', orderRouter);
 
-
+// Start server
 app.listen(port, () => {
   console.log(`✅ Backend running on http://localhost:${port}`);
 });
