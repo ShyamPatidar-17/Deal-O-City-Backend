@@ -21,7 +21,9 @@ app.set('trust proxy', 1);
 // Allowed frontend URLs (no trailing slash)
 const allowedOrigins = [
   'https://admin-deal-o-city-17.vercel.app',
-  'https://deal-o-city-frontend.vercel.app'
+  'https://deal-o-city-frontend.vercel.app',
+  'http://localhost:5174',
+  'http://localhost:5173',
 ];
 
 // CORS options
